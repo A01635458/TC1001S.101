@@ -20,10 +20,11 @@ food_step = 10
 #volver a empezar con enter despues de morir, luisa
 game_running = True
 
+# colores random, excepto rojo
 colors = ['blue', 'green', 'yellow', 'purple', 'orange']
 
 def random_colors():
-   # Regresar colores random para la serpiente y la comida.
+   # Regresar colores random para la serpiente y la comida. Mariela
    food_color = choice(colors)
    snake_color = choice([c for c in colors if c != food_color])
    return snake_color, food_color
@@ -72,7 +73,7 @@ def move():
         print('Snake:', len(snake))
         #llamar, Luisa
         move_food()
-        # cambiar los colores al comer
+        # cambiar los colores al comer Mariela
         snake_color, food_color = random_colors()
     else:
         snake.pop(0)
@@ -104,6 +105,7 @@ def restart_game():
     snake = [vector(10, 0)]
     aim = vector(0, -10)
     food = vector(0, 0)
+    # cada que se empiece el juego se deben de cambiar los colores de la serpiente y de la comida
     snake_color, food_color = random_colors()
     game_running = True
     move()
