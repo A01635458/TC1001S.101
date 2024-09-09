@@ -12,7 +12,7 @@ Exercises
 from turtle import *
 
 from freegames import vector
-
+import math
 
 def line(start, end):
     """Draw line from start to end."""
@@ -51,14 +51,47 @@ def draw_circle(start, end):
 
 def rectangle(start, end):
     """Draw rectangle from start to end."""
-    pass  # TODO
+    up()
+    goto(start.x, start.y)
+    down()
+    width = end.x - start.x
+    height = end.y - start.y
+    begin_fill()
+    for _ in range(2):
+      forward(width)
+      left(90)
+      forward(height)
+      left(90)
+    end_fill()
+
+
 
 
 def triangle(start, end):
     """Draw triangle from start to end."""
-    pass  # TODO
+    up()
+    goto(start.x, start.y)
+    down()
+    begin_fill()
 
+    # Draw the first side of the triangle
+    goto(end.x, end.y)
+    
+    # Calculate the third point of the triangle
+    dx = end.x - start.x
+    dy = end.y - start.y
+    length = ((dx**2) + (dy**2)) ** 0.5
+    
+    # Find a point at 60 degrees to form an equilateral triangle
+    third_point_x = start.x - dy
+    third_point_y = start.y + dx
+    
+    goto(third_point_x, third_point_y)
+    goto(start.x, start.y)
 
+    end_fill()
+    
+  
 def tap(x, y):
     """Store starting point or draw shape."""
     start = state['start']
