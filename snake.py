@@ -8,9 +8,8 @@ Exercises
 4. Change the snake to respond to mouse clicks.
 """
 
-from random import randrange
+from random import randrange, choice
 from turtle import *
-
 from freegames import square, vector
 
 food = vector(0, 0)
@@ -21,6 +20,15 @@ food_step = 10
 #volver a empezar con enter despues de morir, luisa
 game_running = True
 
+colors = ['blue', 'green', 'yellow', 'purple', 'orange']
+
+def random_colors():
+   # Regresar colores random para la serpiente y la comida.
+   food_color = choice(colors)
+   snake_color = choice([c for c in colors if c != food_color])
+   return snake_color, food_color
+
+snake_color, food_color = random_colors()
 
 def change(x, y):
     """Change snake direction."""
@@ -49,6 +57,7 @@ def move_food():
 
 def move():
     """Move snake forward one segment."""
+    global snake_color, food_color
     head = snake[-1].copy()
     head.move(aim)
 
@@ -63,15 +72,17 @@ def move():
         print('Snake:', len(snake))
         #llamar, Luisa
         move_food()
+        # cambiar los colores al comer
+        snake_color, food_color = random_colors()
     else:
         snake.pop(0)
 
     clear()
 
     for body in snake:
-        square(body.x, body.y, 9, 'black')
+        square(body.x, body.y, 9, snake_color)
 
-    square(food.x, food.y, 9, 'green')
+    square(food.x, food.y, 9, food_color)
     update()
     ontimer(move, 100)
 
@@ -89,13 +100,16 @@ def game_over():
 
 def restart_game():
     """Restart the game."""
-    global snake, aim, food, game_running
+    global snake, aim, food, game_running, snake_color, food_color
     snake = [vector(10, 0)]
     aim = vector(0, -10)
     food = vector(0, 0)
+    snake_color, food_color = random_colors()
     game_running = True
     move()
 
+
+snake_color, food_color = random_colors()
 setup(420, 420, 370, 0)
 hideturtle()
 tracer(False)
