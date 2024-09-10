@@ -15,9 +15,10 @@ from turtle import *
 from freegames import path
 
 car = path('car.gif')
-tiles = list(range(32)) * 2
+letters = list('ABCDEFGHIJKLMNOPQRSTUVWXYZ')[:16]  
+tiles = letters * 2
 state = {'mark': None}
-hide = [True] * 64
+hide = [True] * 32
 tap_count = 0 
 
 def square(x, y):
@@ -35,12 +36,12 @@ def square(x, y):
 
 def index(x, y):
     """Convert (x, y) coordinates to tiles index."""
-    return int((x + 200) // 50 + ((y + 200) // 50) * 8)
+    return int((x + 200) // 50 + ((y + 200) // 50) * 4)
 
 
 def xy(count):
     """Convert tiles count to (x, y) coordinates."""
-    return (count % 8) * 50 - 200, (count // 8) * 50 - 200
+    return (count % 8) * 50 - 200, (count // 4) * 50 - 200
 
 
 def tap(x, y):
@@ -71,7 +72,7 @@ def draw():
     color('black')
     write(f'Taps: {tap_count}', font=('Arial', 16, 'normal'))
 
-    for count in range(64):
+    for count in range(32):
         if hide[count]:
             x, y = xy(count)
             square(x, y)
@@ -81,9 +82,10 @@ def draw():
     if mark is not None and hide[mark]:
         x, y = xy(mark)
         up()
-        goto(x + 2, y)
+        goto(x + 25, y + 8)  # Ajuste para centrar el dígito Mariela
         color('black')
-        write(tiles[mark], font=('Arial', 30, 'normal'))
+        write(tiles[mark], align='center', font=('Arial', 30, 'normal'))
+
     #luisa
     if all(not hidden for hidden in hide):
         up()
