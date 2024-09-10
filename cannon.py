@@ -25,7 +25,6 @@ def tap(x, y):
         ball.x = -199
         ball.y = -199
         # Cambia las velocidades para que la bola vaya más rápido en función de la posición del tap
-        # Ajustar el divisor para reducir la velocidad
         speed.x = (x + 200) / 10
         speed.y = (y + 200) / 10
 
@@ -61,18 +60,27 @@ def move():
     # Mueve todos los objetivos hacia la izquierda
     for target in targets:
         target.x -= 1.5
+        # Reposicionar el objetivo si sale de la pantalla
+        if not inside(target):
+            target.x = 200
+            target.y = randrange(-150, 150)
 
     # Si la bola está dentro de los límites, le aplica gravedad
     if inside(ball):
         speed.y -= 0.35  # Aplicar gravedad a la bola
         ball.move(speed)
-    # Reposicionar el balón cuando sale de la ventana
+        # Reposicionar la bola cuando sale de la ventana
+        if not inside(ball):
+            ball.x = -200
+            ball.y = randrange(-150, 150)
+            speed.x = (randrange(-200, 200)) / 10
+            speed.y = (randrange(-200, 200)) / 10
     else:
-        # Reposicionar la bola sin dejar que se quede en el borde
+        # Asegurarse de que la bola tenga velocidad positiva al reposicionarse
         ball.x = -200
-        ball.y = -200
-        speed.x = 0
-        speed.y = 0
+        ball.y = randrange(-150, 150)
+        speed.x = (randrange(-200, 200)) / 10
+        speed.y = (randrange(-200, 200)) / 10
 
     dupe = targets.copy()  # Copia de los objetivos actuales
     targets.clear()  # Limpia la lista de objetivos
@@ -82,11 +90,6 @@ def move():
             targets.append(target)  # Vuelve a añadir el objetivo a la lista
 
     draw()  # Dibuja los objetos actualizados en la pantalla
-
-    # Si algún objetivo sale de la pantalla, termina la función
-    for target in targets:
-        if not inside(target):
-            return
 
     ontimer(move, 25)
 
