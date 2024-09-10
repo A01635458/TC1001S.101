@@ -61,6 +61,13 @@ def move():
     if inside(ball):
         speed.y -= 0.35
         ball.move(speed)
+    # hacer que el juego nunca termine Mariela
+    # Reposicionar el balón cuando sale de la ventana
+    else:
+        ball.x = -199
+        ball.y = -199
+        speed.x = randrange(1, 5)
+        speed.y = randrange(1, 5)
 
     dupe = targets.copy()
     targets.clear()
