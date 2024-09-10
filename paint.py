@@ -89,7 +89,7 @@ def triangle(start, end):
     third_point_y = start.y + dx # Calcula la coordenada y  del tercer punto
     
     goto(third_point_x, third_point_y)
-    goto(start.x, start.y)  Regresa al punto de inicio para cerrar el triángulo
+    goto(start.x, start.y) # Regresa al punto de inicio para cerrar el triángulo
 
     end_fill()
     
