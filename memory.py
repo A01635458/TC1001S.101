@@ -11,16 +11,18 @@ Exercises:
 
 from random import *
 from turtle import *
-
+from PIL import Image
 from freegames import path
 
-car = path('car.gif')
-letters = list('ABCDEFGHIJKLMNOPQRSTUVWXYZ')[:16]  
+#car = path('car.gif')
+letters = list('ABCDEFGHIJKLMNOPQRSTUVWXYZ')[:8]  
 tiles = letters * 2
+shuffle(tiles)
 state = {'mark': None}
-hide = [True] * 32
+hide = [True] * 16
 tap_count = 0 
 
+# Dibujar el cuadrado del grid
 def square(x, y):
     """Draw white square with black outline at (x, y)."""
     up()
@@ -36,12 +38,12 @@ def square(x, y):
 
 def index(x, y):
     """Convert (x, y) coordinates to tiles index."""
-    return int((x + 200) // 50 + ((y + 200) // 50) * 4)
+    return int((x + 200) // 50  + ((y + 200) // 50) * 4)
 
 
 def xy(count):
     """Convert tiles count to (x, y) coordinates."""
-    return (count % 8) * 50 - 200, (count // 4) * 50 - 200
+    return (count % 4) * 50  - 200, (count // 4) * 50 - 200
 
 
 def tap(x, y):
@@ -51,31 +53,35 @@ def tap(x, y):
     mark = state['mark']
     tap_count += 1
 
-    if mark is None or mark == spot or tiles[mark] != tiles[spot]:
-        state['mark'] = spot
-    else:
-        hide[spot] = False
-        hide[mark] = False
-        state['mark'] = None
+    # Verifica que el índice esté dentro del rango permitido
+    if 0 <= spot < len(tiles):
+        # Si no hay ningún tile marcado, o el tile marcado es el mismo que el clicado,
+        # o los tiles no coinciden
+        if mark is None or mark == spot or tiles[mark] != tiles[spot]:
+            state['mark'] = spot
+        else:
+            # Si los tiles coinciden, desoculta ambos tiles
+            hide[spot] = False
+            hide[mark] = False
+            state['mark'] = None
 
 
 def draw():
     """Draw image and tiles."""
-    clear()
-    goto(0, 0)
-    shape(car)
-    stamp()
-
+    clear() # Limpia la pantalla para redibujar todo
+    
     #luisa
     up()
     goto(-180, 180)
     color('black')
     write(f'Taps: {tap_count}', font=('Arial', 16, 'normal'))
 
-    for count in range(32):
+    for count in range(16):
+        # Si el tile está oculto
         if hide[count]:
+            # Obtiene las coordenadas del tile
             x, y = xy(count)
-            square(x, y)
+            square(x, y) # Dibuja el tile en la pantalla
 
     mark = state['mark']
 
@@ -96,9 +102,9 @@ def draw():
     ontimer(draw, 100)
 
 
-shuffle(tiles)
+
 setup(420, 420, 370, 0)
-addshape(car)
+#addshape(car)
 hideturtle()
 tracer(False)
 onscreenclick(tap)
