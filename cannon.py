@@ -10,38 +10,35 @@ Exercises
 
 from random import randrange
 from turtle import *
-
 from freegames import vector
 
 # Inicializa las posiciones de la bola y los objetivos.
-ball = vector(-200, -200) #la bola comienza fuera de la pantalla
-speed = vector(0, 0) #velocidad inicial de la bola
-targets = [] #lista para almacenar los objetos
-
+ball = vector(-200, -200)  # La bola comienza fuera de la pantalla
+speed = vector(0, 0)  # Velocidad inicial de la bola
+targets = []  # Lista para almacenar los objetos
 
 def tap(x, y):
     """Respond to screen tap."""
-# Responde a un toque en la pantalla, lanzando la bola desde su posición inicial
+    # Responde a un toque en la pantalla, lanzando la bola desde su posición inicial
     if not inside(ball):
-        # Cambiar las velocidades para que la bola vaya más rápido en función de la posición del tap
+        # Asegúrate de que la bola no esté en movimiento cuando se reposicione
         ball.x = -199
         ball.y = -199
-	#cambiar las velocidades para que se vaya mas rapido
-        speed.x = (x + 200) /15
-        speed.y = (y + 200) / 15
-
+        # Cambia las velocidades para que la bola vaya más rápido en función de la posición del tap
+        # Ajustar el divisor para reducir la velocidad
+        speed.x = (x + 200) / 10
+        speed.y = (y + 200) / 10
 
 def inside(xy):
-    # Comprueba si el objeto (bola o objetivo) está dentro de los límites de la pantalla
     """Return True if xy within screen."""
+    # Comprueba si el objeto (bola o objetivo) está dentro de los límites de la pantalla
     return -200 < xy.x < 200 and -200 < xy.y < 200
-
 
 def draw():
     """Draw ball and targets."""
-     # Dibuja la bola y los objetivos en la pantalla
-    clear() #limpia la pantalla
-   # Dibuja cada objetivo como un punto azul
+    # Dibuja la bola y los objetivos en la pantalla
+    clear()  # Limpia la pantalla
+    # Dibuja cada objetivo como un punto azul
     for target in targets:
         goto(target.x, target.y)
         dot(20, 'blue')
@@ -53,38 +50,38 @@ def draw():
 
     update()
 
-
 def move():
-    """Move ball and targets.""" 
-     #genera aleatoriamente un nuevo objeto cada 40 ciclos
+    """Move ball and targets."""
+    # Genera aleatoriamente un nuevo objetivo cada 40 ciclos
     if randrange(40) == 0:
         y = randrange(-150, 150)  # Posición aleatoria vertical del nuevo objetivo
         target = vector(200, y)  # El nuevo objetivo aparece en el borde derecho
         targets.append(target)  # Añade el nuevo objetivo a la lista
 
-	# Mueve todos los objetivos hacia la izquierda
+    # Mueve todos los objetivos hacia la izquierda
     for target in targets:
         target.x -= 1.5
- # Si la bola está dentro de los límites, le aplica gravedad
+
+    # Si la bola está dentro de los límites, le aplica gravedad
     if inside(ball):
-        speed.y -= 0.35
+        speed.y -= 0.35  # Aplicar gravedad a la bola
         ball.move(speed)
-    # hacer que el juego nunca termine Mariela
     # Reposicionar el balón cuando sale de la ventana
     else:
-        ball.x = -199
-        ball.y = -199
-        speed.x = randrange(1, 5) #da velocidad aleatoria 
-        speed.y = randrange(1, 5)
+        # Reposicionar la bola sin dejar que se quede en el borde
+        ball.x = -200
+        ball.y = -200
+        speed.x = 0
+        speed.y = 0
 
-    dupe = targets.copy() #copia de los obejetos actuales
-    targets.clear() #limpia
+    dupe = targets.copy()  # Copia de los objetivos actuales
+    targets.clear()  # Limpia la lista de objetivos
 
     for target in dupe:
-        if abs(target - ball) > 13: #Si la distancia entre la bola y el objetivo es mayor a 13, no hay colisión
-            targets.append(target) # Vuelve a añadir el objetivo a la lista
+        if abs(target - ball) > 13:  # Si la distancia entre la bola y el objetivo es mayor a 13, no hay colisión
+            targets.append(target)  # Vuelve a añadir el objetivo a la lista
 
-    draw() # Dibuja los objetos actualizados en la pantalla
+    draw()  # Dibuja los objetos actualizados en la pantalla
 
     # Si algún objetivo sale de la pantalla, termina la función
     for target in targets:
@@ -93,11 +90,10 @@ def move():
 
     ontimer(move, 25)
 
-
 setup(420, 420, 370, 0)
 hideturtle()
 up()
 tracer(False)
-onscreenclick(tap)
+onscreenclick(tap)  # Asigna la función tap al evento de clic en la pantalla
 move()
 done()
