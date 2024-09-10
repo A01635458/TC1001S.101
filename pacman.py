@@ -127,37 +127,41 @@ def move():
             y = 180 - (index // 20) * 20
             square(x, y) 
 
-    up()
-    goto(pacman.x + 10, pacman.y + 10)
-    dot(20, 'yellow')
+    for ghost in ghosts:
+        ghost[0] += ghost[1]
+        if valid(ghost[0]):
+            continue
 
-    for point, course in ghosts:
-        if valid(point + course):
-            point.move(course)
-        else:
-            options = [
-                vector(5, 0),
-                vector(-5, 0),
-                vector(0, 5),
-                vector(0, -5),
-            ]
-            plan = choice(options)
-            course.x = plan.x
-            course.y = plan.y
+        ghost[1] = vector(-ghost[1].y, ghost[1].x)
 
-        up()
-        goto(point.x + 10, point.y + 10)
-        dot(20, 'red')
+        if valid(ghost[0] + ghost[1]):
+            ghost[0] += ghost[1]
+            continue
 
-    update()
+        ghost[1] = vector(-ghost[1].x, -ghost[1].y)
 
-    for point, course in ghosts:
-        if abs(pacman - point) < 20:
+        if valid(ghost[0] + ghost[1]):
+            ghost[0] += ghost[1]
+            continue
+
+        ghost[1] = vector(-ghost[1].x, -ghost[1].y)
+
+    for ghost in ghosts:
+        if pacman.x < ghost[0].x < pacman.x + 20 and pacman.y < ghost[0].y < pacman.y + 20:
+            writer.color('red')
+            writer.write('Game Over', font=('Arial', 40, 'bold'))
             return
     
     # se aumento la velocidad de los fantasmas disminuyendo  el tiempo del temporizador. Mariela
     ontimer(move, 50)
 
+    square(pacman.x, pacman.y)
+
+    for ghost in ghosts:
+        square(ghost[0].x, ghost[0].y)
+
+    update()
+    ontimer(move, 100)
 
 def change(x, y):
     """Change pacman aim if valid."""
@@ -165,18 +169,18 @@ def change(x, y):
         aim.x = x
         aim.y = y
 
-
 setup(420, 420, 370, 0)
 hideturtle()
 tracer(False)
-writer.goto(160, 160)
 writer.color('white')
+writer.penup()
+writer.goto(-200, 190)
 writer.write(state['score'])
-listen()
-onkey(lambda: change(5, 0), 'Right')
-onkey(lambda: change(-5, 0), 'Left')
-onkey(lambda: change(0, 5), 'Up')
-onkey(lambda: change(0, -5), 'Down')
 world()
 move()
+listen()
+onkey(lambda: change(20, 0), 'Right')
+onkey(lambda: change(-20, 0), 'Left')
+onkey(lambda: change(0, 20), 'Up')
+onkey(lambda: change(0, -20), 'Down')
 done()
